@@ -112,16 +112,6 @@ static cputime_t irqtime_tick_accounted(cputime_t maxtime)
 	return irq_cputime;
 }
 
-<<<<<<< HEAD
-	delta = nsecs_to_cputime(irqtime->tick_delta);
-	delta = min(delta, maxtime);
-	irqtime->tick_delta -= cputime_to_nsecs(delta);
-
-	return delta;
-}
-
-=======
->>>>>>> b6c567400e2d... sched/cputime: Increment kcpustat directly on irqtime account
 #else /* CONFIG_IRQ_TIME_ACCOUNTING */
 
 #define sched_clock_irqtime	(0)
