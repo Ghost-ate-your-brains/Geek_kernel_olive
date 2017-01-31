@@ -103,7 +103,7 @@ static cputime_t irqtime_tick_accounted(cputime_t maxtime)
 
 	irq_cputime = nsecs_to_cputime64(irqtime) - base;
 	irq_cputime = min(irq_cputime, maxtime);
-	cpustat[idx] += irq_cputime;
+	cpustat[idx] += cputime_to_nsecs(irq_cputime);
 
 	if (idx == CPUTIME_SOFTIRQ)
 		kcpustat_this_cpu->softirq_no_ksoftirqd += irq_cputime;
