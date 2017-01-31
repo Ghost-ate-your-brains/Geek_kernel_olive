@@ -57,6 +57,7 @@ static void irqtime_account_delta(struct irqtime *irqtime, u64 delta,
 void irqtime_account_irq(struct task_struct *curr)
 {
 	struct irqtime *irqtime = this_cpu_ptr(&cpu_irqtime);
+	u64 *cpustat = kcpustat_this_cpu->cpustat;
 	s64 delta;
 	int cpu;
 	u64 wallclock;
@@ -111,6 +112,7 @@ static cputime_t irqtime_tick_accounted(cputime_t maxtime)
 	return irq_cputime;
 }
 
+<<<<<<< HEAD
 	delta = nsecs_to_cputime(irqtime->tick_delta);
 	delta = min(delta, maxtime);
 	irqtime->tick_delta -= cputime_to_nsecs(delta);
@@ -118,6 +120,8 @@ static cputime_t irqtime_tick_accounted(cputime_t maxtime)
 	return delta;
 }
 
+=======
+>>>>>>> b6c567400e2d... sched/cputime: Increment kcpustat directly on irqtime account
 #else /* CONFIG_IRQ_TIME_ACCOUNTING */
 
 #define sched_clock_irqtime	(0)
