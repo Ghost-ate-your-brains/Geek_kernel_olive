@@ -57,7 +57,6 @@ static void irqtime_account_delta(struct irqtime *irqtime, u64 delta,
 void irqtime_account_irq(struct task_struct *curr)
 {
 	struct irqtime *irqtime = this_cpu_ptr(&cpu_irqtime);
-	u64 *cpustat = kcpustat_this_cpu->cpustat;
 	s64 delta;
 	int cpu;
 	u64 wallclock;
