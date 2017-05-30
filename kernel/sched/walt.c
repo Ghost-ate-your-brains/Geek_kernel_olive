@@ -413,7 +413,7 @@ void sched_account_irqstart(int cpu, struct task_struct *curr, u64 wallclock)
 	if (is_idle_task(curr)) {
 		/* We're here without rq->lock held, IRQ disabled */
 		raw_spin_lock(&rq->lock);
-		update_task_cpu_cycles(curr, cpu, sched_ktime_clock());
+		update_task_cpu_cycles(curr, cpu, ktime_get_ns());
 		raw_spin_unlock(&rq->lock);
 	}
 }
