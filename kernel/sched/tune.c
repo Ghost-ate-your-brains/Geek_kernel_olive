@@ -1074,8 +1074,8 @@ schedtune_boostgroup_init(struct schedtune *st, int idx)
 	/* Initialize per CPUs boost group support */
 	for_each_possible_cpu(cpu) {
 		bg = &per_cpu(cpu_boost_groups, cpu);
-		bg->group[idx].boost = 0;
-		bg->group[idx].valid = true;
+		bg->group[st->idx].boost = 0;
+		bg->group[st->idx].tasks = 0;
 	}
 
 	/* Keep track of allocated boost groups */
