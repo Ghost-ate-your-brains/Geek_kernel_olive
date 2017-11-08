@@ -520,14 +520,6 @@ struct cfs_rq {
 	struct task_group *tg;	/* group that "owns" this runqueue */
 
 #ifdef CONFIG_CFS_BANDWIDTH
-<<<<<<< HEAD
-
-#ifdef CONFIG_SCHED_WALT
-	struct walt_sched_stats walt_stats;
-#endif
-
-=======
->>>>>>> 7ffc62158086... ANDROID: sched/walt: Fix compilation issue for x86_64
 	int runtime_enabled;
 
 	u64 throttled_clock, throttled_clock_task;

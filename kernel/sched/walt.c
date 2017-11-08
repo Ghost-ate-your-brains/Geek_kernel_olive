@@ -232,13 +232,9 @@ static int __init set_sched_predl(char *str)
 }
 early_param("sched_predl", set_sched_predl);
 
-<<<<<<< HEAD
-void inc_rq_walt_stats(struct rq *rq, struct task_struct *p)
-=======
 #ifdef CONFIG_CFS_BANDWIDTH
 void walt_inc_cfs_cumulative_runnable_avg(struct cfs_rq *cfs_rq,
 		struct task_struct *p)
->>>>>>> 7ffc62158086... ANDROID: sched/walt: Fix compilation issue for x86_64
 {
 	inc_nr_big_task(&rq->walt_stats, p);
 	walt_inc_cumulative_runnable_avg(rq, p);
