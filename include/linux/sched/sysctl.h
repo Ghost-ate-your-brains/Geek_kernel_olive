@@ -47,7 +47,10 @@ walt_proc_update_handler(struct ctl_table *table, int write,
 
 #if defined(CONFIG_PREEMPT_TRACER) || defined(CONFIG_IRQSOFF_TRACER)
 extern unsigned int sysctl_preemptoff_tracing_threshold_ns;
+<<<<<<< HEAD
 extern unsigned int sysctl_irqsoff_tracing_threshold_ns;
+=======
+>>>>>>> b57c17b01f62... sched: Add trace point to track preemption disable callers
 #endif
 
 enum sched_tunable_scaling {
