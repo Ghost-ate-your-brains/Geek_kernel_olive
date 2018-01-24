@@ -7,7 +7,7 @@
 # Main environtment
 KERNEL_DIR=$PWD
 KERN_IMG=$KERNEL_DIR/out/arch/arm64/boot/Image.gz-dtb
-ZIP_DIR=$KERNEL_DIR/AnyKernel3
+ZIP_DIR=$HOME/AnyKernel3
 CONFIG=geek-kernel_olive_defconfig
 
 # Export
