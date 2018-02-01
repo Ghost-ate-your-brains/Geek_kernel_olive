@@ -23,7 +23,10 @@
 #ifdef CONFIG_CPU_FREQ_TIMES
 void cpufreq_task_times_init(struct task_struct *p);
 <<<<<<< HEAD
+<<<<<<< HEAD
 void cpufreq_task_times_alloc(struct task_struct *p);
+=======
+>>>>>>> 32fb8f9ec2e8... ANDROID: cpufreq: track per-task time in state
 =======
 >>>>>>> 32fb8f9ec2e8... ANDROID: cpufreq: track per-task time in state
 void cpufreq_task_times_exit(struct task_struct *p);
@@ -32,6 +35,7 @@ int proc_time_in_state_show(struct seq_file *m, struct pid_namespace *ns,
 void cpufreq_acct_update_power(struct task_struct *p, cputime_t cputime);
 void cpufreq_times_create_policy(struct cpufreq_policy *policy);
 void cpufreq_times_record_transition(struct cpufreq_freqs *freq);
+<<<<<<< HEAD
 <<<<<<< HEAD
 void cpufreq_task_times_remove_uids(uid_t uid_start, uid_t uid_end);
 int single_uid_time_in_state_open(struct inode *inode, struct file *file);
@@ -46,6 +50,12 @@ static inline void cpufreq_times_record_transition(
 	struct cpufreq_freqs *freq) {}
 static inline void cpufreq_task_times_remove_uids(uid_t uid_start,
 						  uid_t uid_end) {}
+=======
+#else
+static inline void cpufreq_times_create_policy(struct cpufreq_policy *policy) {}
+static inline void cpufreq_times_record_transition(
+	struct cpufreq_freqs *freq) {}
+>>>>>>> 32fb8f9ec2e8... ANDROID: cpufreq: track per-task time in state
 =======
 #else
 static inline void cpufreq_times_create_policy(struct cpufreq_policy *policy) {}
