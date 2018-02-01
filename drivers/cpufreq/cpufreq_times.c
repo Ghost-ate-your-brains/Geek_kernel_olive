@@ -16,15 +16,19 @@
 #include <linux/cpufreq.h>
 #include <linux/cpufreq_times.h>
 #include <linux/cputime.h>
+<<<<<<< HEAD
 #include <linux/hashtable.h>
 #include <linux/init.h>
 #include <linux/proc_fs.h>
+=======
+>>>>>>> 32fb8f9ec2e8... ANDROID: cpufreq: track per-task time in state
 #include <linux/sched.h>
 #include <linux/seq_file.h>
 #include <linux/slab.h>
 #include <linux/spinlock.h>
 #include <linux/threads.h>
 
+<<<<<<< HEAD
 #define UID_HASH_BITS 10
 
 static DECLARE_HASHTABLE(uid_hash_table, UID_HASH_BITS);
@@ -41,6 +45,9 @@ struct uid_entry {
 	struct rcu_head rcu;
 	u64 time_in_state[0];
 };
+=======
+static DEFINE_SPINLOCK(task_time_in_state_lock); /* task->time_in_state */
+>>>>>>> 32fb8f9ec2e8... ANDROID: cpufreq: track per-task time in state
 
 /**
  * struct cpu_freqs - per-cpu frequency information
@@ -60,6 +67,7 @@ static struct cpu_freqs *all_freqs[NR_CPUS];
 
 static unsigned int next_offset;
 
+<<<<<<< HEAD
 
 /* Caller must hold rcu_read_lock() */
 static struct uid_entry *find_uid_entry_rcu(uid_t uid)
@@ -243,11 +251,19 @@ static int uid_time_in_state_seq_show(struct seq_file *m, void *v)
 void cpufreq_task_times_init(struct task_struct *p)
 {
 	unsigned long flags;
+=======
+void cpufreq_task_times_init(struct task_struct *p)
+{
+	void *temp;
+	unsigned long flags;
+	unsigned int max_state;
+>>>>>>> 32fb8f9ec2e8... ANDROID: cpufreq: track per-task time in state
 
 	spin_lock_irqsave(&task_time_in_state_lock, flags);
 	p->time_in_state = NULL;
 	spin_unlock_irqrestore(&task_time_in_state_lock, flags);
 	p->max_state = 0;
+<<<<<<< HEAD
 }
 
 void cpufreq_task_times_alloc(struct task_struct *p)
@@ -255,6 +271,10 @@ void cpufreq_task_times_alloc(struct task_struct *p)
 	void *temp;
 	unsigned long flags;
 	unsigned int max_state = READ_ONCE(next_offset);
+=======
+
+	max_state = READ_ONCE(next_offset);
+>>>>>>> 32fb8f9ec2e8... ANDROID: cpufreq: track per-task time in state
 
 	/* We use one array to avoid multiple allocs per task */
 	temp = kcalloc(max_state, sizeof(p->time_in_state[0]), GFP_ATOMIC);
@@ -288,9 +308,12 @@ void cpufreq_task_times_exit(struct task_struct *p)
 	unsigned long flags;
 	void *temp;
 
+<<<<<<< HEAD
 	if (!p->time_in_state)
 		return;
 
+=======
+>>>>>>> 32fb8f9ec2e8... ANDROID: cpufreq: track per-task time in state
 	spin_lock_irqsave(&task_time_in_state_lock, flags);
 	temp = p->time_in_state;
 	p->time_in_state = NULL;
@@ -334,9 +357,13 @@ void cpufreq_acct_update_power(struct task_struct *p, cputime_t cputime)
 {
 	unsigned long flags;
 	unsigned int state;
+<<<<<<< HEAD
 	struct uid_entry *uid_entry;
 	struct cpu_freqs *freqs = all_freqs[task_cpu(p)];
 	uid_t uid = from_kuid_munged(current_user_ns(), task_uid(p));
+=======
+	struct cpu_freqs *freqs = all_freqs[task_cpu(p)];
+>>>>>>> 32fb8f9ec2e8... ANDROID: cpufreq: track per-task time in state
 
 	if (!freqs || p->flags & PF_EXITING)
 		return;
@@ -348,12 +375,15 @@ void cpufreq_acct_update_power(struct task_struct *p, cputime_t cputime)
 	    p->time_in_state)
 		p->time_in_state[state] += cputime;
 	spin_unlock_irqrestore(&task_time_in_state_lock, flags);
+<<<<<<< HEAD
 
 	spin_lock_irqsave(&uid_lock, flags);
 	uid_entry = find_or_register_uid_locked(uid);
 	if (uid_entry && state < uid_entry->max_state)
 		uid_entry->time_in_state[state] += cputime;
 	spin_unlock_irqrestore(&uid_lock, flags);
+=======
+>>>>>>> 32fb8f9ec2e8... ANDROID: cpufreq: track per-task time in state
 }
 
 void cpufreq_times_create_policy(struct cpufreq_policy *policy)
@@ -395,6 +425,7 @@ void cpufreq_times_create_policy(struct cpufreq_policy *policy)
 		all_freqs[cpu] = freqs;
 }
 
+<<<<<<< HEAD
 void cpufreq_task_times_remove_uids(uid_t uid_start, uid_t uid_end)
 {
 	struct uid_entry *uid_entry;
@@ -416,6 +447,8 @@ void cpufreq_task_times_remove_uids(uid_t uid_start, uid_t uid_end)
 	spin_unlock_irqrestore(&uid_lock, flags);
 }
 
+=======
+>>>>>>> 32fb8f9ec2e8... ANDROID: cpufreq: track per-task time in state
 void cpufreq_times_record_transition(struct cpufreq_freqs *freq)
 {
 	int index;
@@ -435,6 +468,7 @@ void cpufreq_times_record_transition(struct cpufreq_freqs *freq)
 
 	cpufreq_cpu_put(policy);
 }
+<<<<<<< HEAD
 
 static const struct seq_operations uid_time_in_state_seq_ops = {
 	.start = uid_seq_start,
@@ -470,3 +504,5 @@ static int __init cpufreq_times_init(void)
 }
 
 early_initcall(cpufreq_times_init);
+=======
+>>>>>>> 32fb8f9ec2e8... ANDROID: cpufreq: track per-task time in state
