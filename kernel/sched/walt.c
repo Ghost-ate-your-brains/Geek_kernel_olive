@@ -886,7 +886,7 @@ void fixup_busy_time(struct task_struct *p, int new_cpu)
 	if (!same_freq_domain(new_cpu, task_cpu(p))) {
 		src_rq->notif_pending = true;
 		dest_rq->notif_pending = true;
-		sched_irq_work_queue(&walt_migration_irq_work);
+		irq_work_queue(&walt_migration_irq_work);
 	}
 
 	if (p == src_rq->ed_task) {
@@ -3218,7 +3218,6 @@ void walt_irq_work(struct irq_work *irq_work)
 	u64 wc, total_grp_load = 0;
 	int flag = SCHED_CPUFREQ_WALT;
 	bool is_migration = false;
-	int level = 0;
 
 	/* Am I the window rollover work or the migration work? */
 	if (irq_work == &walt_migration_irq_work)
@@ -3256,9 +3255,6 @@ void walt_irq_work(struct irq_work *irq_work)
 
 		raw_spin_unlock(&cluster->load_lock);
 	}
-
-	if (total_grp_load)
-		walt_update_coloc_boost_load();
 
 	for_each_sched_cluster(cluster) {
 		for_each_cpu(cpu, &cluster->cpus) {
