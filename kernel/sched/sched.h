@@ -829,11 +829,6 @@ struct rq {
 	int prev_top;
 	int curr_top;
 	bool notif_pending;
-<<<<<<< HEAD
-	u64 last_cc_update;
-	u64 cycles;
-=======
->>>>>>> 1b3795e4aba2... sched: Fix incorrect usage of SCHED_CPUFREQ_INTERCLUSTER_MIG flag
 #endif
 
 #ifdef CONFIG_IRQ_TIME_ACCOUNTING
@@ -2308,8 +2303,6 @@ static inline void cpufreq_update_util(struct rq *rq, unsigned int flags)
 	struct update_util_data *data;
 
 #ifdef CONFIG_SCHED_WALT
-<<<<<<< HEAD
-=======
 	unsigned int exception_flags = SCHED_CPUFREQ_INTERCLUSTER_MIG |
 				SCHED_CPUFREQ_PL | SCHED_CPUFREQ_EARLY_DET |
 				SCHED_CPUFREQ_FORCE_UPDATE;
@@ -2318,7 +2311,6 @@ static inline void cpufreq_update_util(struct rq *rq, unsigned int flags)
 	 * Skip if we've already reported, but not if this is an inter-cluster
 	 * migration. Also only allow WALT update sites.
 	 */
->>>>>>> 1b3795e4aba2... sched: Fix incorrect usage of SCHED_CPUFREQ_INTERCLUSTER_MIG flag
 	if (!(flags & SCHED_CPUFREQ_WALT))
 		return;
 	if (!sched_disable_window_stats &&
