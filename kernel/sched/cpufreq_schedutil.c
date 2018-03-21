@@ -243,7 +243,8 @@ static void sugov_iowait_boost(struct sugov_cpu *sg_cpu, unsigned long *util,
 {
 	unsigned int boost_util, boost_max;
 
-	if (!sg_cpu->iowait_boost)
+	BUG_ON(curr_ws < last_ws);
+	if (curr_ws <= last_ws)
 		return;
 
 	if (sg_cpu->iowait_boost_pending) {
