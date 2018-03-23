@@ -6919,11 +6919,14 @@ static unsigned long cpu_estimated_capacity(int cpu, struct task_struct *p)
 static bool is_packing_eligible(struct task_struct *p, int target_cpu,
 				struct find_best_target_env *fbt_env,
 				unsigned int target_cpus_count,
-				int best_idle_cstate, bool boosted)
+				int best_idle_cstate)
 {
 	unsigned long estimated_capacity;
 
 	if (fbt_env->placement_boost || fbt_env->need_idle || boosted)
+		return false;
+
+	if (best_idle_cstate == -1)
 		return false;
 
 	if (best_idle_cstate == -1)
@@ -7278,7 +7281,9 @@ static inline int find_best_target(struct task_struct *p, int *backup_cpu,
 	} while (sg = sg->next, sg != sd->groups);
 
 	if (best_idle_cpu != -1 && !is_packing_eligible(p, target_cpu, fbt_env,
-					active_cpus_count, best_idle_cstate, boosted)) {
+					active_cpus_count, best_idle_cstate)) {
+		if (target_cpu == task_cpu(p))
+			fbt_env->avoid_prev_cpu = true;
 
 		target_cpu = best_idle_cpu;
 		best_idle_cpu = -1;
