@@ -6932,6 +6932,9 @@ static bool is_packing_eligible(struct task_struct *p, int target_cpu,
 	if (best_idle_cstate == -1)
 		return false;
 
+	if (best_idle_cstate == -1)
+		return false;
+
 	if (target_cpus_count != 1)
 		return true;
 
