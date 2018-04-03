@@ -735,10 +735,17 @@ TRACE_EVENT(sched_energy_diff,
 TRACE_EVENT(sched_task_util,
 
 	TP_PROTO(struct task_struct *p, int next_cpu, int backup_cpu,
+<<<<<<< HEAD
 		 int target_cpu, bool sync, bool need_idle, int fastpath,
 		 bool placement_boost, int rtg_cpu, u64 start_t),
 
 	TP_ARGS(p, next_cpu, backup_cpu, target_cpu, sync, need_idle, fastpath,
+=======
+		 int target_cpu, bool sync, bool need_idle,
+		 bool placement_boost, int rtg_cpu, u64 start_t),
+
+	TP_ARGS(p, next_cpu, backup_cpu, target_cpu, sync, need_idle,
+>>>>>>> f925feb4725b... sched: Get sched_task_util trace point working for !SCHED_WALT
 		placement_boost, rtg_cpu, start_t),
 
 	TP_STRUCT__entry(
