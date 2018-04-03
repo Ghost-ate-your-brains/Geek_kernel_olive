@@ -7448,6 +7448,7 @@ static inline bool is_task_util_above_min_thresh(struct task_struct *p)
 	return task_util(p) > threshold;
 }
 
+#ifdef CONFIG_SCHED_WALT
 static inline struct cpumask *find_rtg_target(struct task_struct *p)
 {
 	struct related_thread_group *grp;
@@ -7474,12 +7475,6 @@ static inline struct cpumask *find_rtg_target(struct task_struct *p)
 	return NULL;
 }
 #endif
-
-enum fastpaths {
-	NONE = 0,
-	SYNC_WAKEUP,
-	PREV_CPU_BIAS,
-};
 
 static int select_energy_cpu_brute(struct task_struct *p, int prev_cpu, int sync)
 {
