@@ -7499,6 +7499,12 @@ static inline struct cpumask *find_rtg_target(struct task_struct *p)
 }
 #endif
 
+enum fastpaths {
+	NONE = 0,
+	SYNC_WAKEUP,
+	PREV_CPU_BIAS,
+};
+
 static int select_energy_cpu_brute(struct task_struct *p, int prev_cpu, int sync)
 {
 	bool boosted, prefer_idle;
@@ -7509,6 +7515,7 @@ static int select_energy_cpu_brute(struct task_struct *p, int prev_cpu, int sync
 	struct cpumask *rtg_target = find_rtg_target(p);
 	struct find_best_target_env fbt_env;
 	u64 start_t = 0;
+	int fastpath = 0;
 
 	if (trace_sched_task_util_enabled())
 		start_t = sched_clock();
@@ -7549,8 +7556,11 @@ static int select_energy_cpu_brute(struct task_struct *p, int prev_cpu, int sync
 		}
 	}
 
-	if (bias_to_prev_cpu(p, rtg_target))
-		return prev_cpu;
+	if (bias_to_prev_cpu(p, rtg_target)) {
+		target_cpu = prev_cpu;
+		fastpath = PREV_CPU_BIAS;
+		goto out;
+	}
 
 	rcu_read_lock();
 
@@ -7636,12 +7646,13 @@ static int select_energy_cpu_brute(struct task_struct *p, int prev_cpu, int sync
 	schedstat_inc(p->se.statistics.nr_wakeups_secb_count);
 	schedstat_inc(this_rq()->eas_stats.secb_count);
 
+unlock:
+	rcu_read_unlock();
 out:
 	trace_sched_task_util(p, next_cpu, backup_cpu, target_cpu, sync,
-			      fbt_env.need_idle, fbt_env.placement_boost,
-			      rtg_target ? cpumask_first(rtg_target) : -1,
-			      start_t);
-	rcu_read_unlock();
+			      fbt_env.need_idle, fastpath,
+			      fbt_env.placement_boost, rtg_target ?
+			      cpumask_first(rtg_target) : -1, start_t);
 	return target_cpu;
 }
 
