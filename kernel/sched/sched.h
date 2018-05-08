@@ -1887,11 +1887,7 @@ cpu_util_freq_pelt(int cpu)
 }
 
 #ifdef CONFIG_SCHED_WALT
-<<<<<<< HEAD
-extern u64 walt_load_reported_window;
-=======
 extern atomic64_t walt_irq_work_lastq_ws;
->>>>>>> 83339d1f6d84... sched/walt: Fix stale window start marker passed to the schedutil
 
 static inline unsigned long
 cpu_util_freq_walt(int cpu, struct sched_walt_cpu_load *walt_load)
