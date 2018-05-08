@@ -1887,7 +1887,11 @@ cpu_util_freq_pelt(int cpu)
 }
 
 #ifdef CONFIG_SCHED_WALT
+<<<<<<< HEAD
 extern u64 walt_load_reported_window;
+=======
+extern atomic64_t walt_irq_work_lastq_ws;
+>>>>>>> 83339d1f6d84... sched/walt: Fix stale window start marker passed to the schedutil
 
 static inline unsigned long
 cpu_util_freq_walt(int cpu, struct sched_walt_cpu_load *walt_load)
@@ -1925,7 +1929,7 @@ cpu_util_freq_walt(int cpu, struct sched_walt_cpu_load *walt_load)
 		walt_load->prev_window_util = util;
 		walt_load->nl = nl;
 		walt_load->pl = pl;
-		walt_load->ws = rq->load_reported_window;
+		walt_load->ws = atomic64_read(&walt_irq_work_lastq_ws);
 	}
 
 	return (util >= capacity) ? capacity : util;
@@ -2305,22 +2309,8 @@ static inline void cpufreq_update_util(struct rq *rq, unsigned int flags)
 	struct update_util_data *data;
 
 #ifdef CONFIG_SCHED_WALT
-	unsigned int exception_flags = SCHED_CPUFREQ_INTERCLUSTER_MIG |
-				SCHED_CPUFREQ_PL | SCHED_CPUFREQ_EARLY_DET |
-				SCHED_CPUFREQ_FORCE_UPDATE;
-
-	/*
-	 * Skip if we've already reported, but not if this is an inter-cluster
-	 * migration. Also only allow WALT update sites.
-	 */
 	if (!(flags & SCHED_CPUFREQ_WALT))
 		return;
-	if (!sched_disable_window_stats &&
-		(rq->load_reported_window == rq->window_start) &&
-		!(flags & exception_flags))
-		return;
-	if (!(flags & exception_flags))
-		rq->load_reported_window = rq->window_start;
 #endif
 
 	data = rcu_dereference_sched(*per_cpu_ptr(&cpufreq_update_util_data,

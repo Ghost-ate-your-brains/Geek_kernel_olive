@@ -47,8 +47,7 @@ static bool sched_ktime_suspended;
 static struct cpu_cycle_counter_cb cpu_cycle_counter_cb;
 static bool use_cycle_counter;
 DEFINE_MUTEX(cluster_lock);
-static atomic64_t walt_irq_work_lastq_ws;
-u64 walt_load_reported_window;
+atomic64_t walt_irq_work_lastq_ws;
 
 static struct irq_work walt_cpufreq_irq_work;
 static struct irq_work walt_migration_irq_work;
