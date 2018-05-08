@@ -6952,8 +6952,21 @@ static bool is_packing_eligible(struct task_struct *p, int target_cpu,
 static int start_cpu(struct task_struct *p, bool boosted,
 		     struct cpumask *rtg_target)
 {
-	struct root_domain *rd = cpu_rq(smp_processor_id())->rd;
-	int start_cpu = -1;
+	int fcpu = group_first_cpu(sg);
+
+	/* Are all CPUs isolated in this group? */
+	if (!sg->group_weight)
+		return true;
+
+	/*
+	 * Don't skip a group if a task affinity allows it
+	 * to run only on that group.
+	 */
+	if (cpumask_subset(tsk_cpus_allowed(p), sched_group_cpus(sg)))
+		return false;
+
+	if (!task_fits_max(p, fcpu))
+		return true;
 
 	if (boosted)
 		return rd->max_cap_orig_cpu;
