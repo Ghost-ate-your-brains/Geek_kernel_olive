@@ -47,7 +47,8 @@ static bool sched_ktime_suspended;
 static struct cpu_cycle_counter_cb cpu_cycle_counter_cb;
 static bool use_cycle_counter;
 DEFINE_MUTEX(cluster_lock);
-atomic64_t walt_irq_work_lastq_ws;
+static atomic64_t walt_irq_work_lastq_ws;
+u64 walt_load_reported_window;
 
 static struct irq_work walt_cpufreq_irq_work;
 static struct irq_work walt_migration_irq_work;
@@ -3230,9 +3231,8 @@ void walt_irq_work(struct irq_work *irq_work)
 		level++;
 	}
 
-	wc = sched_ktime_clock();
+	wc = ktime_get_ns();
 	walt_load_reported_window = atomic64_read(&walt_irq_work_lastq_ws);
-
 	for_each_sched_cluster(cluster) {
 		u64 aggr_grp_load = 0;
 
