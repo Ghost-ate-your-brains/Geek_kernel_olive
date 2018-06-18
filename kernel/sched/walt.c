@@ -3221,6 +3221,7 @@ void walt_irq_work(struct irq_work *irq_work)
 	u64 wc, total_grp_load = 0;
 	int flag = SCHED_CPUFREQ_WALT;
 	bool is_migration = false;
+	int level = 0;
 
 	/* Am I the window rollover work or the migration work? */
 	if (irq_work == &walt_migration_irq_work)
