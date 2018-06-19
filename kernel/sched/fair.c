@@ -7047,15 +7047,13 @@ static inline int find_best_target(struct task_struct *p, int *backup_cpu,
 
 			cpumask_clear_cpu(i, &search_cpus);
 
+			trace_sched_cpu_util(i);
 			if (!cpu_online(i) || cpu_isolated(i))
 				continue;
 
 			isolated_candidate = i;
 
 			if (avoid_prev_cpu && i == task_cpu(p))
-				continue;
-
-			if (walt_cpu_high_irqload(i) || is_reserved(i))
 				continue;
 
 			if (walt_cpu_high_irqload(i) || is_reserved(i))
