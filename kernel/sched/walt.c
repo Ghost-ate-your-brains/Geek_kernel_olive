@@ -416,7 +416,7 @@ void sched_account_irqstart(int cpu, struct task_struct *curr, u64 wallclock)
 	if (is_idle_task(curr)) {
 		/* We're here without rq->lock held, IRQ disabled */
 		raw_spin_lock(&rq->lock);
-		update_task_cpu_cycles(curr, cpu, ktime_get_ns());
+		update_task_cpu_cycles(curr, cpu, sched_ktime_clock());
 		raw_spin_unlock(&rq->lock);
 	}
 }
@@ -3234,8 +3234,9 @@ void walt_irq_work(struct irq_work *irq_work)
 		level++;
 	}
 
-	wc = ktime_get_ns();
+	wc = sched_ktime_clock();
 	walt_load_reported_window = atomic64_read(&walt_irq_work_lastq_ws);
+
 	for_each_sched_cluster(cluster) {
 		u64 aggr_grp_load = 0;
 

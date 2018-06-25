@@ -413,6 +413,13 @@ static void sugov_work(struct kthread_work *work)
 	struct sugov_policy *sg_policy = container_of(work, struct sugov_policy, work);
 
 	mutex_lock(&sg_policy->work_lock);
+<<<<<<< HEAD
+=======
+	raw_spin_lock_irqsave(&sg_policy->update_lock, flags);
+	sugov_track_cycles(sg_policy, sg_policy->policy->cur,
+			   sched_ktime_clock());
+	raw_spin_unlock_irqrestore(&sg_policy->update_lock, flags);
+>>>>>>> 7e1d61892c5a... Revert "sched: Remove sched_ktime_clock()"
 	__cpufreq_driver_target(sg_policy->policy, sg_policy->next_freq,
 				CPUFREQ_RELATION_L);
 	mutex_unlock(&sg_policy->work_lock);
@@ -870,6 +877,13 @@ static void sugov_limits(struct cpufreq_policy *policy)
 
 	if (!policy->fast_switch_enabled) {
 		mutex_lock(&sg_policy->work_lock);
+<<<<<<< HEAD
+=======
+		raw_spin_lock_irqsave(&sg_policy->update_lock, flags);
+		sugov_track_cycles(sg_policy, sg_policy->policy->cur,
+				   sched_ktime_clock());
+		raw_spin_unlock_irqrestore(&sg_policy->update_lock, flags);
+>>>>>>> 7e1d61892c5a... Revert "sched: Remove sched_ktime_clock()"
 		cpufreq_policy_apply_limits(policy);
 		mutex_unlock(&sg_policy->work_lock);
 	}
