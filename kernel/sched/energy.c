@@ -62,6 +62,17 @@ int arch_update_cpu_topology(void)
 	return update_topology;
 }
 
+static int update_topology;
+
+/*
+ * Ideally this should be arch specific implementation,
+ * let's define here to help rebuild sched_domain with new capacities.
+ */
+int arch_update_cpu_topology(void)
+{
+	return update_topology;
+}
+
 void init_sched_energy_costs(void)
 {
 	struct device_node *cn, *cp;
@@ -304,8 +315,6 @@ static int sched_energy_probe(struct platform_device *pdev)
 
 		walt_sched_energy_populated_callback();
 	}
-
-	walt_map_freq_to_load();
 
 	dev_info(&pdev->dev, "Sched-energy-costs capacity updated\n");
 	return 0;
