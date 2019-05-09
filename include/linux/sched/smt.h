@@ -14,3 +14,5 @@ static __always_inline bool sched_smt_active(void)
 #else
 static inline bool sched_smt_active(void) { return false; }
 #endif
+
+#endif
