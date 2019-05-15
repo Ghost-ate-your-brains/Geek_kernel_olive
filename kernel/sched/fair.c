@@ -7091,7 +7091,10 @@ static inline int find_best_target(struct task_struct *p, int *backup_cpu,
 			 * to have available on this CPU once the task is
 			 * enqueued here.
 			 */
-			spare_cap = capacity_orig - new_util;
+			min_capped_util = max(new_util, capacity_min_of(i));
+
+			if (cpu_check_overutil_condition(i, new_util))
+				continue;
 
 			/*
 			 * Case A) Latency sensitive tasks
